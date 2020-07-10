@@ -1,7 +1,7 @@
 import React from "react";
-import {useState} from "react";
-
-
+import { useState} from "react";
+import axios from "axios";
+import { backend } from "../conf";
 
 const SignUp = () => {
   const [newUser, setNewUser] = useState({});
@@ -10,12 +10,14 @@ const SignUp = () => {
     const tmp = { ...newUser, [e.target.name]: e.target.value };
     setNewUser(tmp);
   };
-const json= JSON.stringify(newUser)
+  const json = JSON.stringify(newUser);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(newUser)
+    axios.post(`${backend}/auth/signup`, newUser).then() 
+    .catch((er)=>console.log("erreur",er));
   };
+  
 
   return (
     <div>
@@ -30,6 +32,16 @@ const json= JSON.stringify(newUser)
           type="text"
           name="name"
           id="name"
+          required
+          onChange={(e) => {
+            UserChange(e);
+          }}
+          placeholder="Ton prénom"
+        />
+        <input
+          type="text"
+          name="lastname"
+          id="lastname"
           required
           onChange={(e) => {
             UserChange(e);
@@ -62,12 +74,11 @@ const json= JSON.stringify(newUser)
           id="passwordbis"
           required
           
-          onChange={(e) => {
-            UserChange(e);
-          }}
           placeholder="Confirme ton mot de passe"
         />
-        <button type="submit" value="Je m'inscris" >Je m'inscris</button>
+        <button type="submit" value="Je m'inscris">
+          Je m'inscris
+        </button>
       </form>
     </div>
   );
