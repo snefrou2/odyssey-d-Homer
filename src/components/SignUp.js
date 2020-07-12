@@ -2,9 +2,30 @@ import React from "react";
 import { useState} from "react";
 import axios from "axios";
 import { backend } from "../conf";
+import { FormControl } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Button from '@material-ui/core/Button';
+
 
 const SignUp = () => {
   const [newUser, setNewUser] = useState({});
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const UserChange = (e) => {
     const tmp = { ...newUser, [e.target.name]: e.target.value };
@@ -16,19 +37,44 @@ const SignUp = () => {
     e.preventDefault();
     axios.post(`${backend}/auth/signup`, newUser).then() 
     .catch((er)=>console.log("erreur",er));
+    console.log(newUser)
   };
   
 
   return (
-    <div>
-      <h1>{json}</h1>
-      <h2>Inscris-toi</h2>
-      <form
-        onSubmit={(e) => {
-          handleSubmit(e);
+    <Grid  container
+    alignItems='center'
+    style={{ height:  '100%' }}>
+       <Grid
+       container
+       alignItems='center'
+       justify='center'
+          >
+               <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
         }}
-      >
-        <input
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message={json}
+        action={
+          <React.Fragment>
+            <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </React.Fragment>
+        }
+      />
+          <h2>Inscris-toi</h2>
+          </Grid>
+         
+          <form onSubmit={(e) => {
+          handleSubmit(e);
+        }}>
+           <FormControl>
+        <TextField
           type="text"
           name="name"
           id="name"
@@ -38,7 +84,7 @@ const SignUp = () => {
           }}
           placeholder="Ton prénom"
         />
-        <input
+        <TextField
           type="text"
           name="lastname"
           id="lastname"
@@ -48,7 +94,7 @@ const SignUp = () => {
           }}
           placeholder="Ton Nom"
         />
-        <input
+        <TextField
           type="email"
           name="email"
           id="email"
@@ -58,7 +104,7 @@ const SignUp = () => {
           }}
           placeholder="Ton Email"
         />
-        <input
+        <TextField
           type="password"
           name="password"
           id="password"
@@ -68,19 +114,20 @@ const SignUp = () => {
           }}
           placeholder="Ton mot de passe"
         />
-        <input
+        <TextField
           type="password"
           name="passwordbis"
           id="passwordbis"
-          required
-          
+       
           placeholder="Confirme ton mot de passe"
         />
-        <button type="submit" value="Je m'inscris">
+        <Button type="submit" value="Je m'inscris"   onClick={handleClick}>
           Je m'inscris
-        </button>
-      </form>
-    </div>
+        </Button>
+        </FormControl>
+    </form>
+   
+    </Grid>
   );
 };
 export default SignUp;
